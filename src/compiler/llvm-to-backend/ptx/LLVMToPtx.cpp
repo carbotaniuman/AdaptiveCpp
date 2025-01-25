@@ -251,7 +251,7 @@ bool LLVMToPtxTranslator::translateToBackendFormat(llvm::Module &FlavoredModule,
   std::string ClangPath = HIPSYCL_CLANG_PATH;
 
   std::string PtxVersionArg = "+ptx" + std::to_string(PtxVersion);
-  std::string PtxTargetArg = "sm_" + std::to_string(PtxTarget);
+  std::string PtxTargetArg = "sm_80";
   llvm::SmallVector<llvm::StringRef, 16> Invocation{ClangPath,
                                                     "-cc1",
                                                     "-triple",

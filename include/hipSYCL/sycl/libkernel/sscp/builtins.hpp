@@ -89,35 +89,35 @@ HIPSYCL_DEFINE_SSCP_GENFLOAT_MATH_BUILTIN2(fmax)
 HIPSYCL_DEFINE_SSCP_GENFLOAT_MATH_BUILTIN2(fmin)
 HIPSYCL_DEFINE_SSCP_GENFLOAT_MATH_BUILTIN2(fmod)
 
-template<class T>
-HIPSYCL_BUILTIN float __acpp_fract(float x, T* ptr) {
+template<class FloatPtr>
+HIPSYCL_BUILTIN float __acpp_fract(float x, FloatPtr ptr) {
   float val;
   float res = __acpp_sscp_fract_f32(x, &val);
-  *ptr = static_cast<T>(val);
+  *ptr = val;
   return res;
 }
 
-template<class T>
-HIPSYCL_BUILTIN double __acpp_fract(double x, T* ptr) {
+template<class FloatPtr>
+HIPSYCL_BUILTIN double __acpp_fract(double x, FloatPtr ptr) {
   double val;
   double res = __acpp_sscp_fract_f64(x, &val);
-  *ptr = static_cast<T>(val);
+  *ptr = val;
   return res;
 }
 
-template<class IntT>
-HIPSYCL_BUILTIN float __acpp_frexp(float x, IntT* ptr) {
+template<class IntPtr>
+HIPSYCL_BUILTIN float __acpp_frexp(float x, IntPtr ptr) {
   __acpp_int32 val;
   float res = __acpp_sscp_frexp_f32(x, &val);
-  *ptr = static_cast<IntT>(val);
+  *ptr = val;
   return res;
 }
 
-template<class IntT>
-HIPSYCL_BUILTIN double __acpp_frexp(double x, IntT* ptr) {
-  __acpp_int64 val;
+template<class IntPtr>
+HIPSYCL_BUILTIN double __acpp_frexp(double x, IntPtr ptr) {
+  __acpp_int32 val;
   double res = __acpp_sscp_frexp_f64(x, &val);
-  *ptr = static_cast<IntT>(val);
+  *ptr = val;
   return res;
 }
 
@@ -131,25 +131,25 @@ HIPSYCL_BUILTIN float __acpp_ldexp(float x, IntType k) noexcept {
 
 template<class IntType>
 HIPSYCL_BUILTIN double __acpp_ldexp(double x, IntType k) noexcept {
-  return __acpp_sscp_ldexp_f64(x, static_cast<__acpp_int64>(k));
+  return __acpp_sscp_ldexp_f64(x, static_cast<__acpp_int32>(k));
 }
 
 HIPSYCL_DEFINE_SSCP_GENFLOAT_MATH_BUILTIN(lgamma)
 HIPSYCL_DEFINE_SSCP_GENFLOAT_MATH_BUILTIN(tgamma)
 
-template<class IntT>
-HIPSYCL_BUILTIN float __acpp_lgamma_r(float x, IntT* ptr) {
+template<class IntPointer>
+HIPSYCL_BUILTIN float __acpp_lgamma_r(float x, IntPointer ptr) {
   __acpp_int32 val;
   float res = __acpp_sscp_lgamma_r_f32(x, &val);
-  *ptr = static_cast<IntT>(val);
+  *ptr = val;
   return res;
 }
 
-template<class IntT>
-HIPSYCL_BUILTIN double __acpp_lgamma_r(double x, IntT* ptr) {
-  __acpp_int64 val;
+template<class IntPointer>
+HIPSYCL_BUILTIN double __acpp_lgamma_r(double x, IntPointer ptr) {
+  __acpp_int32 val;
   double res = __acpp_sscp_lgamma_r_f64(x, &val);
-  *ptr = static_cast<IntT>(val);
+  *ptr = val;
   return res;
 }
 
@@ -178,19 +178,19 @@ HIPSYCL_BUILTIN T __acpp_minmag(T x, T y) noexcept {
 }
 
 
-template<class FloatT>
-HIPSYCL_BUILTIN float __acpp_modf(float x, FloatT* y) noexcept {
+template<class FloatPtr>
+HIPSYCL_BUILTIN float __acpp_modf(float x, FloatPtr y) noexcept {
   float val;
   float res = __acpp_sscp_modf_f32(x, &val);
-  *y = static_cast<FloatT>(val);
+  *y = val;
   return res;
 }
 
-template<class FloatT>
-HIPSYCL_BUILTIN double __acpp_modf(double x, FloatT* y) noexcept {
+template<class FloatPtr>
+HIPSYCL_BUILTIN double __acpp_modf(double x, FloatPtr y) noexcept {
   double val;
   double res = __acpp_sscp_modf_f64(x, &val);
-  *y = static_cast<FloatT>(val);
+  *y = val;
   return res;
 }
 
@@ -218,7 +218,7 @@ HIPSYCL_BUILTIN float __acpp_rootn(float x, IntType y) noexcept {
 
 template<class IntType>
 HIPSYCL_BUILTIN double __acpp_rootn(double x, IntType y) noexcept {
-  return __acpp_sscp_rootn_f64(x, static_cast<__acpp_int64>(y));
+  return __acpp_sscp_rootn_f64(x, static_cast<__acpp_int32>(y));
 }
 
 HIPSYCL_DEFINE_SSCP_GENFLOAT_MATH_BUILTIN(round)

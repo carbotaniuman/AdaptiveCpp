@@ -181,12 +181,15 @@ HIPSYCL_BUILTIN T __acpp_fmod(T x, T y) noexcept {
   return std::fmod(x, y);
 }
 
-template<class T>
-T __acpp_fract(T x, T* ptr) noexcept;
+template<class T, class FloatPtr>
+T __acpp_fract(T x, FloatPtr ptr) noexcept;
 
 template<class T, class IntPtr>
 HIPSYCL_BUILTIN T __acpp_frexp(T x, IntPtr y) noexcept {
-  return std::frexp(x, y);
+  int val;
+  T res = std::frexp(x, &val);
+  *y = val;
+  return res;
 }
 
 template<class T>
@@ -212,7 +215,7 @@ HIPSYCL_BUILTIN T __acpp_lgamma(T x) noexcept {
 template<class T, class IntPtr>
 HIPSYCL_BUILTIN T __acpp_lgamma_r(T x, IntPtr y) noexcept {
   auto r = host_builtins::__acpp_lgamma(x);
-  auto g = std::tgamma(x);
+  T g = std::tgamma(x);
   *y = (g >= 0) ? 1 : -1;
   return r;
 }
@@ -265,7 +268,10 @@ HIPSYCL_BUILTIN T __acpp_minmag(T x, T y) noexcept {
 
 template<class T, class FloatPtr>
 HIPSYCL_BUILTIN T __acpp_modf(T x, FloatPtr y) noexcept {
-  return std::modf(x, y);
+  T val;
+  T res = std::modf(x, &val);
+  *y = val;
+  return res;
 }
 
 template<class T>

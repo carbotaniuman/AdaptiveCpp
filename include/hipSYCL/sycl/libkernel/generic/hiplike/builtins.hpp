@@ -107,18 +107,24 @@ HIPSYCL_DEFINE_HIPLIKE_MATH_BUILTIN2(__acpp_fmin, fminf, fmin)
 HIPSYCL_DEFINE_HIPLIKE_MATH_BUILTIN2(__acpp_fmod, fmodf, fmod)
 
 // Unsupported
-template<class T>
+template<class T, class FloatPtr>
 HIPSYCL_HIPLIKE_BUILTIN
-T __acpp_fract(T x, T* ptr) noexcept;
+T __acpp_fract(T x, FloatPtr ptr) noexcept;
 
 template<class IntPtr>
 HIPSYCL_HIPLIKE_BUILTIN float __acpp_frexp(float x, IntPtr y) noexcept {
-  return ::frexpf(x, y);
+  int val;
+  float res = ::frexpf(x, &val);
+  *y = val;
+  return res;
 }
 
 template<class IntPtr>
 HIPSYCL_HIPLIKE_BUILTIN double __acpp_frexp(double x, IntPtr y) noexcept {
-  return ::frexp(x, y);
+  int val;
+  double res = ::frexp(x, &val);
+  *y = val;
+  return res;
 }
 
 HIPSYCL_DEFINE_HIPLIKE_MATH_BUILTIN2(__acpp_hypot, hypotf, hypot)
@@ -174,12 +180,18 @@ HIPSYCL_HIPLIKE_BUILTIN T __acpp_minmag(T x, T y) noexcept {
 
 template<class FloatPtr>
 HIPSYCL_HIPLIKE_BUILTIN float __acpp_modf(float x, FloatPtr y) noexcept {
-  return ::modff(x, y);
+  float val;
+  float res = ::modff(x, &val);
+  *y = val;
+  return res;
 };
 
 template<class FloatPtr>
 HIPSYCL_HIPLIKE_BUILTIN double __acpp_modf(double x, FloatPtr y) noexcept {
-  return ::modf(x, y);
+  double val;
+  double res = ::modf(x, &val);
+  *y = val;
+  return res;
 };
 
 HIPSYCL_DEFINE_HIPLIKE_MATH_BUILTIN2(__acpp_nextafter, nextafterf, nextafter)
@@ -219,14 +231,18 @@ HIPSYCL_DEFINE_HIPLIKE_MATH_BUILTIN(__acpp_sin, sinf, sin)
 template<class FloatPtr>
 HIPSYCL_HIPLIKE_BUILTIN float __acpp_sincos(float x, FloatPtr cosval) noexcept {
   float sinval;
+  float val;
   ::sincosf(x, &sinval, cosval);
+  *cosval = val;
   return sinval;
 }
 
 template<class FloatPtr>
 HIPSYCL_HIPLIKE_BUILTIN double __acpp_sincos(double x, FloatPtr cosval) noexcept {
   double sinval;
-  ::sincos(x, &sinval, cosval);
+  double val;
+  ::sincos(x, &sinval, &val);
+  *cosval = val;
   return sinval;
 }
 

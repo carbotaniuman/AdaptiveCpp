@@ -30,11 +30,9 @@ public:
   stable_running_hash() : value{offset} {}
 
   void operator()(const void *data, std::size_t size) {
-    for(int i = 0; i < size; i += sizeof(uint64_t)) {
-      uint64_t current = 0;
-      int read_size = std::min(sizeof(uint64_t), size - i);
-      std::memcpy(&current, (char*)data + i, read_size);
-      value ^= current;
+    auto ptr = static_cast<const uint8_t*>(data);
+    for(int i = 0; i < size; i++) {
+      value ^= ptr[i];
       value *= prime;
     }
   }

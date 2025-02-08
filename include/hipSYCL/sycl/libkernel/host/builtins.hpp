@@ -181,8 +181,17 @@ HIPSYCL_BUILTIN T __acpp_fmod(T x, T y) noexcept {
   return std::fmod(x, y);
 }
 
-template<class T, class FloatPtr>
-T __acpp_fract(T x, FloatPtr ptr) noexcept;
+template<class FloatPtr>
+HIPSYCL_BUILTIN float __acpp_fract(float x, FloatPtr y) {
+  *y = std::floor(x);
+  return std::fmin(x - *y, std::nextafter(1.f, 0.f));
+}
+
+template<class FloatPtr>
+HIPSYCL_BUILTIN double __acpp_fract(double x, FloatPtr y) {
+  *y = std::floor(x);
+  return std::fmin(x - *y, std::nextafter(1., 0.));
+}
 
 template<class T, class IntPtr>
 HIPSYCL_BUILTIN T __acpp_frexp(T x, IntPtr y) noexcept {
@@ -266,10 +275,18 @@ HIPSYCL_BUILTIN T __acpp_minmag(T x, T y) noexcept {
   return (abs_x < abs_y) ? x : y;
 }
 
-template<class T, class FloatPtr>
-HIPSYCL_BUILTIN T __acpp_modf(T x, FloatPtr y) noexcept {
-  T val;
-  T res = std::modf(x, &val);
+template<class FloatPtr>
+HIPSYCL_BUILTIN float __acpp_modf(float x, FloatPtr y) noexcept {
+  float val;
+  float res = std::modf(x, &val);
+  *y = val;
+  return res;
+}
+
+template<class FloatPtr>
+HIPSYCL_BUILTIN double __acpp_modf(double x, FloatPtr y) noexcept {
+  double val;
+  double res = std::modf(x, &val);
   *y = val;
   return res;
 }
@@ -721,18 +738,18 @@ HIPSYCL_BUILTIN T __acpp_sign(T x) noexcept {
 template <typename VecType>
 HIPSYCL_BUILTIN VecType 
 __acpp_cross3(const VecType &a, const VecType &b) noexcept {
-  return {a.y() * b.z() - a.z() * b.y(),
-          a.z() * b.x() - a.x() * b.z(),
-          a.x() * b.y() - a.y() * b.x()};
+  return {a[1] * b[2] - a[2] * b[1],
+          a[2] * b[0] - a[0] * b[2],
+          a[0] * b[1] - a[1] * b[0]};
 }
 
 template <typename VecType>
 HIPSYCL_BUILTIN VecType 
 __acpp_cross4(const VecType &a, const VecType &b) noexcept {
-  return {a.y() * b.z() - a.z() * b.y(), 
-          a.z() * b.x() - a.x() * b.z(),
-          a.x() * b.y() - a.y() * b.x(),
-          typename VecType::element_type{0}};
+  return {a[1] * b[2] - a[2] * b[1], 
+          a[2] * b[0] - a[0] * b[2],
+          a[0] * b[1] - a[1] * b[0],
+          typename VecType::value_type{0}};
 }
 
 // ****************** geometric functions ******************
@@ -743,8 +760,8 @@ HIPSYCL_BUILTIN T __acpp_dot(T a, T b) noexcept {
 }
 
 template <class T, std::enable_if_t<!std::is_arithmetic_v<T>, int> = 0>
-HIPSYCL_BUILTIN typename T::element_type __acpp_dot(T a, T b) noexcept {
-  typename T::element_type result = 0;
+HIPSYCL_BUILTIN typename T::value_type __acpp_dot(T a, T b) noexcept {
+  typename T::value_type result = 0;
   for (int i = 0; i < a.size(); ++i) {
     result += a[i] * b[i];
   }
@@ -757,7 +774,7 @@ HIPSYCL_BUILTIN T __acpp_length(T a) noexcept {
 }
 
 template <class T, std::enable_if_t<!std::is_arithmetic_v<T>, int> = 0>
-HIPSYCL_BUILTIN typename T::element_type __acpp_length(T a) noexcept {
+HIPSYCL_BUILTIN typename T::value_type __acpp_length(T a) noexcept {
   auto d = host_builtins::__acpp_dot(a, a);
   return host_builtins::__acpp_sqrt(d);
 }
@@ -779,7 +796,7 @@ HIPSYCL_BUILTIN T __acpp_fast_length(T a) noexcept {
 }
 
 template <class T, std::enable_if_t<!std::is_arithmetic_v<T>, int> = 0>
-HIPSYCL_BUILTIN typename T::element_type __acpp_fast_length(T a) noexcept {
+HIPSYCL_BUILTIN typename T::value_type __acpp_fast_length(T a) noexcept {
   auto d = host_builtins::__acpp_dot(a, a);
   return host_builtins::__acpp_half_sqrt(d);
 }

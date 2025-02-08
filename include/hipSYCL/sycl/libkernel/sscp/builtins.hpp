@@ -536,18 +536,18 @@ HIPSYCL_BUILTIN double __acpp_sign(double x) noexcept {
 template <typename VecType>
 HIPSYCL_BUILTIN VecType 
 __acpp_cross3(const VecType &a, const VecType &b) noexcept {
-  return {a.y() * b.z() - a.z() * b.y(),
-          a.z() * b.x() - a.x() * b.z(),
-          a.x() * b.y() - a.y() * b.x()};
+  return {a[1] * b[2] - a[2] * b[1],
+          a[2] * b[0] - a[0] * b[2],
+          a[0] * b[1] - a[1] * b[0]};
 }
 
 template <typename VecType>
 HIPSYCL_BUILTIN VecType 
 __acpp_cross4(const VecType &a, const VecType &b) noexcept {
-  return {a.y() * b.z() - a.z() * b.y(), 
-          a.z() * b.x() - a.x() * b.z(),
-          a.x() * b.y() - a.y() * b.x(),
-          typename VecType::element_type{0}};
+  return {a[1] * b[2] - a[2] * b[1], 
+          a[2] * b[0] - a[0] * b[2],
+          a[0] * b[1] - a[1] * b[0],
+          typename VecType::value_type{0}};
 }
 
 // ****************** geometric functions ******************
@@ -558,8 +558,8 @@ HIPSYCL_BUILTIN T __acpp_dot(T a, T b) noexcept {
 }
 
 template <class T, std::enable_if_t<!std::is_arithmetic_v<T>, int> = 0>
-HIPSYCL_BUILTIN typename T::element_type __acpp_dot(T a, T b) noexcept {
-  typename T::element_type result = 0;
+HIPSYCL_BUILTIN typename T::value_type __acpp_dot(T a, T b) noexcept {
+  typename T::value_type result = 0;
   for (int i = 0; i < a.size(); ++i) {
     result += a[i] * b[i];
   }
@@ -572,7 +572,7 @@ HIPSYCL_BUILTIN T __acpp_length(T a) noexcept {
 }
 
 template <class T, std::enable_if_t<!std::is_arithmetic_v<T>, int> = 0>
-HIPSYCL_BUILTIN typename T::element_type __acpp_length(T a) noexcept {
+HIPSYCL_BUILTIN typename T::value_type __acpp_length(T a) noexcept {
   auto d = sscp_builtins::__acpp_dot(a, a);
   return sscp_builtins::__acpp_sqrt(d);
 }
@@ -594,7 +594,7 @@ HIPSYCL_BUILTIN T __acpp_fast_length(T a) noexcept {
 }
 
 template <class T, std::enable_if_t<!std::is_arithmetic_v<T>, int> = 0>
-HIPSYCL_BUILTIN typename T::element_type __acpp_fast_length(T a) noexcept {
+HIPSYCL_BUILTIN typename T::value_type __acpp_fast_length(T a) noexcept {
   auto d = sscp_builtins::__acpp_dot(a, a);
   return sscp_builtins::__acpp_half_sqrt(d);
 }

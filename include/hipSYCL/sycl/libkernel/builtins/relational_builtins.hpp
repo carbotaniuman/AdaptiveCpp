@@ -8,10 +8,18 @@
  * See file LICENSE in the project root for full license details.
  */
 // SPDX-License-Identifier: BSD-2-Clause
-#ifndef HIPSYCL_BUILTINS_HPP
-#define HIPSYCL_BUILTINS_HPP
+#ifndef HIPSYCL_RELATIONAL_BUILTINS_HPP
+#define HIPSYCL_RELATIONAL_BUILTINS_HPP
 
-#include "hipSYCL/sycl/libkernel/builtins/math_builtins.hpp"
-#include "hipSYCL/sycl/libkernel/builtins/generic_builtins.hpp"
+#include <cstdint>
+#include "builtin_utils.hpp"
 
+#include "hipSYCL/sycl/libkernel/builtin_interface.hpp"
+
+namespace hipsycl::sycl {
+namespace detail {
+
+}
+
+}
 #endif

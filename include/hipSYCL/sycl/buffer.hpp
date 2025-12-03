@@ -1286,6 +1286,12 @@ private:
 
   void init(const range<dimensions>& range, T* host_memory)
   {
+    if(range.size() == 0) {
+      init(range);
+      _impl->writes_back = false;
+      return;
+    }
+
     if(!host_memory)
       throw exception{make_error_code(errc::invalid),
                       "buffer: Supplied host pointer is null."};
